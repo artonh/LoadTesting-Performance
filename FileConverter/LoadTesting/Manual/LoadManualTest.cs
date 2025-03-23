@@ -11,6 +11,12 @@
                 {
                     PerformConversion(inputName, outputFileName, i + 1).GetAwaiter().GetResult();
                 });
+
+            //clean before next test
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            Thread.Sleep(1000);
         }
     }
 }

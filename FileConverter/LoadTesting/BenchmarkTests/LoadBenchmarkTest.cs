@@ -14,7 +14,7 @@ namespace FileConverter.LoadTesting
             var timestamp = DateTime.Now.ToString("yyyyMMdd-HHmm"); //yyyyMMdd-HHmmss
 
 
-            var artifactsPath1 = Path.Combine(FileConverterConfigConstants.BenchmarkArtifacts, $"Run-{timestamp}");
+            var artifactsPath1 = Path.Combine(FileConverterConfigConstants.LogArtifacts, $"Run-{timestamp}");
 
             var job = Job.Default
                          .WithRuntime(CoreRuntime.Core80)

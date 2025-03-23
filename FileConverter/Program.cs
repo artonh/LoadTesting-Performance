@@ -4,9 +4,6 @@ using FileConverter.LoadTesting.Manual;
 using FileConverter.Models;
 using Microsoft.Extensions.Configuration;
 
-Console.WriteLine("Load Testing for Syncfusion File Converter to PDF...!");
-Console.WriteLine($"Logical CPU threads available: {Environment.ProcessorCount}");
-
 var config = new ConfigurationBuilder()
              .AddJsonFile("appsettings.json")
              .Build();
@@ -19,6 +16,11 @@ var fileConverterConfig = config
 FileConverterConfigConstants.LoadFrom(fileConverterConfig);
 
 EnsureRequiredDirectories();
+
+var mainOutPutLogFile = OuPutConsoleLogToFile(settings.FileTests);
+
+Console.WriteLine("Load Testing for Syncfusion File Converter to PDF...!");
+Console.WriteLine($"Logical CPU threads available: {Environment.ProcessorCount}");
 
 foreach (var test in settings.FileTests)
 {
@@ -63,10 +65,45 @@ Console.ReadLine();
 
 
 #region helpers
+string OuPutConsoleLogToFile(List<LoadTestFileConfig> fileTests)
+{
+    if (fileTests.Count == 0)
+        return "";
+
+    var logFileName = $"{DateTime.Now:yyyyMMdd_HHmmss}_LoadTest.log";
+    var logFilePath = Path.Combine(FileConverterConfigConstants.LogArtifacts, logFileName);
+
+    BaseOuPutConsoleLogToFile(logFilePath);
+
+    var name = string.Join(", ", fileTests.Select(x => $"{x.MaxParallelism} {SanitizeFileName(x.FileName)}"));
+    Console.WriteLine($"Will be converted: {name}");
+    return logFilePath;
+}
+
+string SanitizeFileName(string name)
+{
+    foreach (char c in Path.GetInvalidFileNameChars())
+    {
+        name = name.Replace(c, '_');
+    }
+    return name;
+}
+
+void BaseOuPutConsoleLogToFile(string logFilePath)
+{
+    var logWriter = new StreamWriter(logFilePath, append: false)
+    {
+        AutoFlush = true
+    };
+    var originalConsoleOut = Console.Out;
+    var multiWriter = new MultiTextWriter(originalConsoleOut, logWriter);
+    Console.SetOut(multiWriter);
+}
+
 void EnsureRequiredDirectories()
 {
     Directory.CreateDirectory(FileConverterConfigConstants.BasePathForResult);
-    Directory.CreateDirectory(FileConverterConfigConstants.BenchmarkArtifacts);
+    Directory.CreateDirectory(FileConverterConfigConstants.LogArtifacts);
 
     if (!Directory.Exists(FileConverterConfigConstants.BasePath))
     {

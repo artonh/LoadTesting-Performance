@@ -1,14 +1,11 @@
-﻿using FileConverter.Converter;
-using FileConverter.Models;
-
-namespace FileConverter.LoadTesting.Manual
+﻿namespace FileConverter.LoadTesting.Manual
 {
     public abstract class BaseLoadManualTest
     {
         protected async Task PerformConversion(string inputFile, string outputFile, int i)
         {
-            var outputPath = string.Format($"{FileConverterConfigConstants.BasePathForResult}{outputFile}", i);
-            var inputPath = string.Format($"{FileConverterConfigConstants.BasePath}{inputFile}", i);
+            var inputPath = string.Format(Path.Combine(FileConverterConfigConstants.BasePath, inputFile), i);
+            var outputPath = string.Format(Path.Combine(FileConverterConfigConstants.BasePathForResult, outputFile), i);
 
             await Converter.Converter.ToPdf(inputPath,
                 outputPath,

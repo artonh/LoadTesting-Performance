@@ -7,15 +7,29 @@ namespace FileConverter.LoadTesting
     {
         public static string BasePath = string.Empty;
         public static string BasePathForResult = string.Empty;
-        public static string BenchmarkArtifacts = string.Empty;
+        public static string LogArtifacts = string.Empty;
         public static ConversionOptions Watermark = new();
 
         public static void LoadFrom(FileConverterConfig config)
         {
-            BasePath = config.BasePath;
-            BasePathForResult = config.BasePathForResult;
-            BenchmarkArtifacts = config.BenchmarkArtifacts;
-            Watermark = config.Watermark;
+            string baseDir = AppContext.BaseDirectory;
+
+            BasePath = ResolvePath(baseDir, config.BasePath);
+            BasePathForResult = ResolvePath(baseDir, config.BasePathForResult);
+            LogArtifacts = ResolvePath(baseDir, config.LogArtifacts);
+
+            Watermark = config.Watermark ?? new ConversionOptions();
+            if (!string.IsNullOrWhiteSpace(Watermark.ImagePath))
+            {
+                Watermark.ImagePath = ResolvePath(baseDir, Watermark.ImagePath);
+            }
+        }
+
+        private static string ResolvePath(string baseDir, string configuredPath)
+        {
+            return Path.IsPathRooted(configuredPath)
+                ? configuredPath
+                : Path.GetFullPath(Path.Combine(baseDir, configuredPath));
         }
     }
 }
