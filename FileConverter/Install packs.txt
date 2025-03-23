@@ -1,0 +1,21 @@
+﻿
+--for word docIo support
+Install-Package Syncfusion.DocIO.Net.Core
+
+--pdf support
+Install-Package Syncfusion.Pdf.Net.Core
+
+--Excel (XlsIO) support
+Install-Package Syncfusion.XlsIO.Net.Core
+
+--PowerPoint (Presentation) support
+Install-Package Syncfusion.Presentation.Net.Core
+
+--Word to PDF
+Install-Package Syncfusion.DocIORenderer.Net.Core
+
+--g Excel to PDF 
+Install-Package Syncfusion.XlsIORenderer.Net.Core
+
+-- PowerPoint to PDF 
+Install-Package Syncfusion.PresentationRenderer.Net.Core
